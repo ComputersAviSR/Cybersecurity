@@ -8,7 +8,7 @@
 # against the BeyondTrust API and fetches all the managed accounts.             #
 #                                                                               #
 # VERSION                                                                       #
-# 1.1.1                                                                         #
+# 1.2.1                                                                         #
 #                                                                               #
 # .BUILD                                                                        #
 # Build:                                                                        #
