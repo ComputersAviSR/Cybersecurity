@@ -1,7 +1,7 @@
 ﻿<################################################################################>
 # SYNOPSIS                                                                      #
 # This script is designed to authenticate and fetch all the managed accounts    #
-# using BeyondTrust API.                                                        #
+# managed systems & devices using BeyondTrust API.                              #
 #                                                                               #
 # DESCRIPTION                                                                   #
 # The script uses predefined API key and user credentials to authenticate       #
@@ -14,17 +14,18 @@
 # Build:                                                                        #
 #                                                                               #
 # PURPOSE                                                                       #
-# To automate the process of fetching all the managed account details           #
-# from BeyondTrust and exporting them to a single Excel file with multiple      #
+# To automate the process of fetching all the managed account, managed systems  #
+# & Devices details from BeyondTrust and exporting them to a single Excel file  #
+# with multiple                                                                 #
 # sheets.                                                                       #
 #                                                                               #
 <################################################################################>
 
 # API CALLS THAT ARE USED IN THIS SCRIPT
 
-# GET SmartRules/{ID}/Assets --> This is for Managed Accounts
-# GET ManagedSystems
-# GET Devices
+# GET SmartRules/{ID}/Assets --> To get Managed Accounts
+# GET ManagedSystems --> To get Managed Accounts
+# GET Devices --> To get Managed Accounts
 
 # Define API key and username
 $baseURL = Read-Host "Provide Cloud API URL --> "
@@ -158,7 +159,18 @@ function AuthenticateAndFetchManagedAccounts {
             }
         } 
         catch [System.Net.WebException] {
-            Write-Host "Error occurred while fetching accounts for category '$category': $_"
+            $errorMessage = $_.Exception.Message
+            $response = $_.Exception.Response
+            if ($response -ne $null) {
+                $statusCode = [int]$response.StatusCode
+                if ($statusCode -eq 404) {
+                    Write-Host "'$category'. Resource not found."
+                } else {
+                    Write-Host "Error occurred while fetching accounts for category '$category': $errorMessage"
+                }
+            } else {
+                Write-Host "Error occurred while fetching accounts for category '$category': $errorMessage"
+            }
         }
     }
 
